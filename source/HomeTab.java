@@ -4,6 +4,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -29,11 +31,10 @@ class HomeTab extends Tab {
         primaryLayout.setSpacing(20);
         primaryLayout.setAlignment(Pos.CENTER);
         primaryLayout.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-
-        // Title of the application, shown in large font
-        Label titleLabel = new Label("Recipro");
-        titleLabel.setFont(new Font("Verdana", 32));
-        titleLabel.setTextFill(Color.rgb(220, 60, 60));
+        
+        //Image
+        Image img = new Image("/resource/Reci-Pro.png");
+        ImageView imgView = new ImageView(img);
 
         // Secondary layout to house input and submit button
         HBox secondaryLayout = new HBox();
@@ -63,7 +64,7 @@ class HomeTab extends Tab {
         secondaryLayout.getChildren().addAll(searchField, searchButton);
 
         // Add all items to the primary layout
-        primaryLayout.getChildren().addAll(titleLabel, secondaryLayout, newRecipeButton);
+        primaryLayout.getChildren().addAll(imgView, secondaryLayout, newRecipeButton);
 
         // Set primary layout as the content of the tab
         setContent(primaryLayout);
