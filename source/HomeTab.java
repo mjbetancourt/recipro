@@ -31,7 +31,7 @@ class HomeTab extends Tab {
         primaryLayout.setSpacing(20);
         primaryLayout.setAlignment(Pos.CENTER);
         primaryLayout.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-        
+
         //Image
         Image img = new Image("/resource/Reci-Pro.png");
         ImageView imgView = new ImageView(img);
@@ -50,12 +50,12 @@ class HomeTab extends Tab {
         // Button to submit the query
         Button searchButton = new Button("Search");
         searchButton.setOnAction(a -> {
-            try {
-				fetchIngredients();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+          try {
+				    fetchIngredients();
+			    } catch (Exception e) {
+				    // TODO Auto-generated catch block
+				    e.printStackTrace();
+			    }
             searchField.setText("");
         });
 
