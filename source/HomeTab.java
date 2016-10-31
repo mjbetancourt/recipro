@@ -78,10 +78,14 @@ class HomeTab extends Tab {
     /**
      * Fetches the comma-separated ingredients in the ingredient field
      * and initiates a search.
+     * @throws SQLException 
      */
-    private void fetchIngredients() {
+    private void fetchIngredients() throws SQLException {
         for (String s : searchField.getText().split(", ")) {
-            System.out.println(s); // temporarily print ingredients to the console
+        	Connect newConnection = new Connect();
+        	newConnection.query(s);
+        	newConnection.getResults();
+            
         }
 
         getTabPane().getTabs().add(new SearchTab());
