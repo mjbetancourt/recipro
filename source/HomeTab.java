@@ -50,7 +50,12 @@ class HomeTab extends Tab {
         // Button to submit the query
         Button searchButton = new Button("Search");
         searchButton.setOnAction(a -> {
-            fetchIngredients();
+            try {
+				fetchIngredients();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
             searchField.setText("");
         });
 
