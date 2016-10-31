@@ -90,7 +90,7 @@ public class Connect {
 	 */
 	private void clearTable() throws SQLException{
 		connector();
-		String SQL = "DELETE FROM Result";
+		String SQL = "DELETE FROM ResultTable";
 		stmt = con.createStatement();
 		stmt.executeUpdate(SQL);
 	}
