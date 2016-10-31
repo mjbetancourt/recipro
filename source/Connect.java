@@ -23,7 +23,7 @@ public class Connect {
 	private int port = 53978;
 	private String user = "bahama";
 	private String password = "recipro";
-	private String database = "testDB";
+	private String database = "ReciProDB";
 	private Connection con = null;
 	private Statement stmt = null;
 	private ResultSet rs = null;
@@ -46,14 +46,14 @@ public class Connect {
 	public void query(String s) throws SQLException
 	{
 		connector();
-		String SQL = "SELECT DISTINCT * from TestTable WHERE (Description LIKE '%"+s+"%'"+
-				"OR TestID LIKE '%"+s+"%')";
+		String SQL = "SELECT DISTINCT * from MasterTable WHERE (dishName LIKE '%"+s+"%'"+
+				"OR ingredients LIKE '%"+s+"%')";
 		stmt = con.createStatement();
 		rs = stmt.executeQuery(SQL);
 		
 		try{
 		while (rs.next()) {
-			SQL = "INSERT INTO Result (TestID, Description) VALUES("+rs.getInt(1)+", '"+rs.getString(2)+"');";
+			SQL = "INSERT INTO ResultTable VALUES ('"+rs.getString(1)+"', '"+rs.getString(2)+"', '"+rs.getString(3)+"');";
 			con.createStatement();
 			stmt.executeUpdate(SQL);
 		}
@@ -76,7 +76,7 @@ public class Connect {
 		rs = stmt.executeQuery(SQL);
 		
 		while (rs.next()){
-			System.out.println(rs.getString(1) + " " + rs.getString(2));
+			System.out.println(rs.getString(1) + " " + rs.getString(2) + " " + rs.getString(3));
 		}
 		clearTable();
 	}
@@ -113,6 +113,23 @@ public class Connect {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	/**
+	 * This method will call the connector method
+	 * Then it will take the parameters and make a new entry 
+	 * into the database for a new recipe
+	 * @param name
+	 * @param ingredient
+	 * @param recipe
+	 * @throws SQLException
+	 */
+	public void addRecipe(String name, String ingredient, String recipe) throws SQLException
+	{
+		connector();
+		String SQL = "INSERT INTO MasterTable VALUES('"+name+"', '"+ingredient+"', '"+recipe+"')";
+		stmt = con.createStatement();
+		stmt.executeUpdate(SQL);
 	}
 	
 	
