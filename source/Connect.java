@@ -71,7 +71,7 @@ public class Connect {
 	 */
 	public void getResults() throws SQLException{
 		connector();
-		String SQL = "SELECT DISTINCT * FROM Result";
+		String SQL = "SELECT DISTINCT * FROM ResultTable";
 		stmt = con.createStatement();
 		rs = stmt.executeQuery(SQL);
 		
