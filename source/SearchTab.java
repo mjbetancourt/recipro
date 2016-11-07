@@ -5,7 +5,11 @@ import javafx.scene.control.Tab;
  */
 class SearchTab extends Tab {
 
-    SearchTab() {
+    private Connect connection;
+
+    SearchTab(Connect connection) {
         super("Searching...");
+
+        this.connection = connection;
     }
 }
