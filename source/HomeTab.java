@@ -16,7 +16,7 @@ import javafx.scene.text.Font;
 class HomeTab extends Tab {
 
     /**
-     * Serves as a comma-delimited entry for ingredient search.
+     * Serves as a space-separated entry for recipe search.
      */
     private TextField searchField;
 
