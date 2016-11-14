@@ -1,4 +1,3 @@
-package application;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -17,6 +16,20 @@ public class Connect {
 	 */
 	public Connect() {}
 
+	/**
+	 * Accepts an ArrayList of keywords and initiates a search.
+	 */
+	public Connect(ArrayList<String> keywords) {
+		this.keywords = keywords;
+
+		for (String keyword : keywords) {
+			query(keyword);
+			getResults();
+		}
+
+		clearTable();
+	}
+
 	private String Server = "68.0.192.250";
 	private int port = 53978;
 	private String user = "bahama";
@@ -25,6 +38,8 @@ public class Connect {
 	private Connection con = null;
 	private Statement stmt = null;
 	private ResultSet rs = null;
+
+	private final ArrayList<String> keywords;
 
 	//Creates the connection string required to connect to the DB
 	private String jdbcurl = "jdbc:sqlserver://" + Server + ":" + port + ";databaseName=" + database + ";user=" + user

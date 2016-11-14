@@ -11,5 +11,14 @@ class SearchTab extends Tab {
         super("Searching...");
 
         this.connection = connection;
+
+        TableView table = new TableView();
+        TableColumn recipeColumn = new TableColumn("Recipe");
+
+        table.getColumns.add(recipeColumn);
+
+        // tab needs a layout manager
+        // maybe add a search field at the top to do a new search without returning to the home tab?
+        setContent(table);
     }
 }

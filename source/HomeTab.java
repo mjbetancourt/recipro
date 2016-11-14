@@ -50,12 +50,13 @@ class HomeTab extends Tab {
         // Button to submit the query
         Button searchButton = new Button("Search");
         searchButton.setOnAction(a -> {
-          try {
-				    fetchIngredients();
-			    } catch (Exception e) {
-				    // TODO Auto-generated catch block
-				    e.printStackTrace();
-			    }
+            try {
+				search();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
             searchField.setText("");
         });
 
@@ -76,19 +77,17 @@ class HomeTab extends Tab {
     }
 
     /**
-     * Fetches the comma-separated ingredients in the ingredient field
-     * and initiates a search.
+     * Searches by space-separated keywords.
      * @throws SQLException
      */
-    private void fetchIngredients() throws SQLException {
-        Connect newConnection = new Connect();
+    private void search() throws SQLException {
+        final ArrayList<String> keywords = new ArrayList<>();
 
-        for (String s : searchField.getText().split(", ")) {
-        	newConnection.query(s);
-        	newConnection.getResults();
+        for (String keyword : searchField.getText().split(" ")) {
+        	keywords.add(keyword);
         }
 
-        getTabPane().getTabs().add(new SearchTab(newConnection));
+        getTabPane().getTabs().add(new SearchTab(new Connect(keywords)));
     }
 
     /**
