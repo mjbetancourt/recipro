@@ -16,7 +16,7 @@ import javafx.scene.text.Font;
 class HomeTab extends Tab {
 
     /**
-     * Serves as a comma-delimited entry for ingredient search.
+     * Serves as a space-separated entry for recipe search.
      */
     private TextField searchField;
 
@@ -31,7 +31,7 @@ class HomeTab extends Tab {
         primaryLayout.setSpacing(20);
         primaryLayout.setAlignment(Pos.CENTER);
         primaryLayout.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-        
+
         //Image
         Image img = new Image("/resource/Reci-Pro.png");
         ImageView imgView = new ImageView(img);
@@ -51,11 +51,12 @@ class HomeTab extends Tab {
         Button searchButton = new Button("Search");
         searchButton.setOnAction(a -> {
             try {
-				fetchIngredients();
+				search();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+
             searchField.setText("");
         });
 
@@ -76,19 +77,17 @@ class HomeTab extends Tab {
     }
 
     /**
-     * Fetches the comma-separated ingredients in the ingredient field
-     * and initiates a search.
-     * @throws SQLException 
+     * Searches by space-separated keywords.
+     * @throws SQLException
      */
-    private void fetchIngredients() throws SQLException {
-        for (String s : searchField.getText().split(", ")) {
-        	Connect newConnection = new Connect();
-        	newConnection.query(s);
-        	newConnection.getResults();
-            
+    private void search() throws SQLException {
+        final ArrayList<String> keywords = new ArrayList<>();
+
+        for (String keyword : searchField.getText().split(" ")) {
+        	keywords.add(keyword);
         }
 
-        getTabPane().getTabs().add(new SearchTab());
+        getTabPane().getTabs().add(new SearchTab(new Connect(keywords)));
     }
 
     /**
