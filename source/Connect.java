@@ -13,16 +13,17 @@ import java.util.ArrayList;
  */
 public class Connect {
 
-	private String Server = "68.0.192.250";
-	private int port = 53978;
-	private String user = "bahama";
-	private String password = "recipro";
-	private String database = "ReciProDB";
+	private final String Server = "68.0.192.250";
+	private final String port = "53978";
+	private final String user = "bahama";
+	private final String password = "recipro";
+	private final String database = "ReciProDB";
+
 	private Connection con = null;
 	private Statement stmt = null;
 	private ResultSet rs = null;
 
-	private final ArrayList<String> keywords;
+	private ArrayList<String> keywords = new ArrayList<>();
 
 	//Creates the connection string required to connect to the DB
 	private String jdbcurl = "jdbc:sqlserver://" + Server + ":" + port + ";databaseName=" + database + ";user=" + user
