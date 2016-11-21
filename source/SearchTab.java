@@ -1,4 +1,4 @@
-import javafx.scene.control.Tab;
+import javafx.scene.control.*;
 
 /**
  * Created by dillon on 9/29/16.
@@ -15,7 +15,7 @@ class SearchTab extends Tab {
         TableView table = new TableView();
         TableColumn recipeColumn = new TableColumn("Recipe");
 
-        table.getColumns.add(recipeColumn);
+        table.getColumns().add(recipeColumn);
 
         // tab needs a layout manager
         // maybe add a search field at the top to do a new search without returning to the home tab?

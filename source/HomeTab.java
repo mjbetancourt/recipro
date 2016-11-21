@@ -1,14 +1,15 @@
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+
+import java.sql.SQLException;
+
+import java.util.ArrayList;
 
 /**
  * Created by Dillon Fagan on 9/29/16.
@@ -33,8 +34,8 @@ class HomeTab extends Tab {
         primaryLayout.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
 
         //Image
-        Image img = new Image("/resource/Reci-Pro.png");
-        ImageView imgView = new ImageView(img);
+        //Image img = new Image("/resource/Reci-Pro.png"); Path not working?
+        //ImageView imgView = new ImageView(img);
 
         // Secondary layout to house input and submit button
         HBox secondaryLayout = new HBox();
@@ -70,7 +71,7 @@ class HomeTab extends Tab {
         secondaryLayout.getChildren().addAll(searchField, searchButton);
 
         // Add all items to the primary layout
-        primaryLayout.getChildren().addAll(imgView, secondaryLayout, newRecipeButton);
+        primaryLayout.getChildren().addAll(secondaryLayout, newRecipeButton);
 
         // Set primary layout as the content of the tab
         setContent(primaryLayout);
@@ -78,7 +79,6 @@ class HomeTab extends Tab {
 
     /**
      * Searches by space-separated keywords.
-     * @throws SQLException
      */
     private void search() throws SQLException {
         final ArrayList<String> keywords = new ArrayList<>();
@@ -87,7 +87,11 @@ class HomeTab extends Tab {
         	keywords.add(keyword);
         }
 
-        getTabPane().getTabs().add(new SearchTab(new Connect(keywords)));
+        try {
+            getTabPane().getTabs().add(new SearchTab(new Connect(keywords)));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
