@@ -5,30 +5,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import java.util.ArrayList;
+
 /**
  * Created by Robert Russell
  *
  */
 public class Connect {
-
-	/**
-	 * Default constructor
-	 */
-	public Connect() {}
-
-	/**
-	 * Accepts an ArrayList of keywords and initiates a search.
-	 */
-	public Connect(ArrayList<String> keywords) {
-		this.keywords = keywords;
-
-		for (String keyword : keywords) {
-			query(keyword);
-			getResults();
-		}
-
-		clearTable();
-	}
 
 	private String Server = "68.0.192.250";
 	private int port = 53978;
@@ -45,6 +28,28 @@ public class Connect {
 	private String jdbcurl = "jdbc:sqlserver://" + Server + ":" + port + ";databaseName=" + database + ";user=" + user
 								+ ";password=" + password;
 
+	/**
+	 * Default constructor
+	 */
+	public Connect() {}
+
+	/**
+	 * Accepts an ArrayList of keywords and initiates a search.
+	 */
+	public Connect(ArrayList<String> keywords) throws SQLException {
+		this.keywords = keywords;
+
+		try {
+			for (String keyword : keywords) {
+				query(keyword);
+				getResults();
+			}
+
+			clearTable();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * This method will call the connector() Method
@@ -69,7 +74,9 @@ public class Connect {
 				con.createStatement();
 				stmt.executeUpdate(SQL);
 			}
-		} catch (Exception e) {}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -80,16 +87,19 @@ public class Connect {
 	 * @throws SQLException
 	 */
 	public void getResults() throws SQLException {
-		connector();
-		String SQL = "SELECT DISTINCT * FROM ResultTable";
-		stmt = con.createStatement();
-		rs = stmt.executeQuery(SQL);
 
-		while (rs.next()) {
-			System.out.println(rs.getString(1) + " " + rs.getString(2) + " " + rs.getString(3));
-		}
+		try {
+			connector();
+			String SQL = "SELECT DISTINCT * FROM ResultTable";
+			stmt = con.createStatement();
+			rs = stmt.executeQuery(SQL);
 
-		clearTable();
+			while (rs.next()) {
+				System.out.println(rs.getString(1) + " " + rs.getString(2) + " " + rs.getString(3));
+			}
+
+			clearTable();
+		} catch (SQLException e) {}
 	}
 
 	/**
