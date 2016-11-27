@@ -101,7 +101,9 @@ public class Connect {
 			}
 
 			clearTable();
-		} catch (SQLException e) {}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
