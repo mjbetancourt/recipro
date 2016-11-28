@@ -34,8 +34,8 @@ class HomeTab extends Tab {
         primaryLayout.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
 
         // Logo
-        //Image logo = new Image("assets/logo.png");
-        //ImageView logoView = new ImageView(logo);
+        Image logo = new Image("/images/logo.png");
+        ImageView logoView = new ImageView(logo);
 
         // Secondary layout to house input and submit button
         HBox secondaryLayout = new HBox();
@@ -71,7 +71,7 @@ class HomeTab extends Tab {
         secondaryLayout.getChildren().addAll(searchField, searchButton);
 
         // Add all items to the primary layout
-        primaryLayout.getChildren().addAll(secondaryLayout, newRecipeButton);
+        primaryLayout.getChildren().addAll(logoView, secondaryLayout, newRecipeButton);
 
         // Set primary layout as the content of the tab
         setContent(primaryLayout);
