@@ -36,8 +36,8 @@ public class Connect {
 	 * Returns an ObservableList containing all recipes in the database.
 	 * @throws SQLException
 	 */
-	public ObservableList<String> getAll() throws SQLException {
-		ObservableList<String> results = FXCollections.observableArrayList();
+	public static ObservableList<Recipe> getAll() throws SQLException {
+		ObservableList<Recipe> results = FXCollections.observableArrayList();
 
 		try {
 			connector();
@@ -47,7 +47,8 @@ public class Connect {
 			set = statement.executeQuery(SQL);
 
 			while (set.next()) {
-				results.addAll(set.getString(1));
+				Recipe r = new Recipe(set.getString(1), set.getString(3));
+				results.addAll(r);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -61,8 +62,8 @@ public class Connect {
 	 * that are like given keywords.
 	 * @throws SQLException
 	 */
-	public static ObservableList<String> getByKeyword(String s) throws SQLException {
-		ObservableList<String> results = FXCollections.observableArrayList();
+	public static ObservableList<Recipe> getByKeyword(String s) throws SQLException {
+		ObservableList<Recipe> results = FXCollections.observableArrayList();
 
 		final ArrayList<String> keywords = new ArrayList<>();
         for (String keyword : s.split(" ")) {
@@ -88,7 +89,8 @@ public class Connect {
 			set = statement.executeQuery(SQL);
 
 			while (set.next() != false) {
-				results.addAll(set.getString(1));
+				Recipe r = new Recipe(set.getString(1), set.getString(3));
+				results.addAll(r);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

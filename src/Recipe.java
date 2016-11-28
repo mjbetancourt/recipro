@@ -6,21 +6,15 @@ import java.util.ArrayList;
 public class Recipe {
 
     private String title;
-    private ArrayList<String> ingredients;
     private String instructions;
 
-    public Recipe(String title, ArrayList<String> ingredients, String instructions) {
+    public Recipe(String title, String instructions) {
         this.title = title;
-        this.ingredients = ingredients;
         this.instructions = instructions;
     }
 
     public String getTitle() {
         return title;
-    }
-
-    public ArrayList<String> getIngredients() {
-        return ingredients;
     }
 
     public String getInstructions() {

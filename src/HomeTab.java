@@ -82,7 +82,13 @@ class HomeTab extends Tab {
      */
     private void search() throws ClassNotFoundException, SQLException {
         try {
-            SearchTab newSearchTab = new SearchTab(searchField.getText());
+            SearchTab newSearchTab;
+
+            if (searchField.getText() == "") {
+                newSearchTab = new SearchTab();
+            } else {
+                newSearchTab = new SearchTab(searchField.getText());
+            }
 
             getTabPane().getTabs().add(newSearchTab);
             getTabPane().getSelectionModel().select(newSearchTab);
