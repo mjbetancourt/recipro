@@ -7,6 +7,8 @@ import java.sql.Statement;
 
 import java.util.ArrayList;
 
+import javafx.collections.*;
+
 /**
  * Created by Robert Russell
  *
@@ -37,7 +39,7 @@ public class Connect {
 	/**
 	 * Accepts an ArrayList of keywords and initiates a search.
 	 */
-	public Connect(ArrayList<String> keywords) throws SQLException {
+	public Connect(ArrayList<String> keywords) throws ClassNotFoundException, SQLException {
 		this.keywords = keywords;
 
 		try {
@@ -47,7 +49,7 @@ public class Connect {
 			}
 
 			clearTable();
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -62,21 +64,21 @@ public class Connect {
 	 * @throws ClassNotFoundException
 	 * @throws SQLException
 	 */
-	public void query(String s) throws SQLException {
-		connector();
-
-		final String SQL = "SELECT DISTINCT * from MasterTable WHERE (dishName LIKE '%"+s+"%'"+
-				"OR ingredients LIKE '%"+s+"%')";
-		stmt = con.createStatement();
-		rs = stmt.executeQuery(SQL);
-
+	public void query(String s) throws ClassNotFoundException, SQLException {
 		try {
+			connector();
+
+			String SQL = "SELECT DISTINCT * from MasterTable WHERE (dishName LIKE '%"+s+"%'"+
+					"OR ingredients LIKE '%"+s+"%')";
+			stmt = con.createStatement();
+			rs = stmt.executeQuery(SQL);
+
 			while (rs.next()) {
-				final SQL = "INSERT INTO ResultTable VALUES ('"+rs.getString(1)+"', '"+rs.getString(2)+"', '"+rs.getString(3)+"');";
+				SQL = "INSERT INTO ResultTable VALUES ('"+rs.getString(1)+"', '"+rs.getString(2)+"', '"+rs.getString(3)+"');";
 				con.createStatement();
 				stmt.executeUpdate(SQL);
 			}
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -88,7 +90,9 @@ public class Connect {
 	 * Then it will call the clearTable() method
 	 * @throws SQLException
 	 */
-	public void getResults() throws SQLException {
+	public ObservableList<String> getResults() throws SQLException {
+		ObservableList<String> results = FXCollections.observableArrayList();
+
 		try {
 			connector();
 
@@ -97,13 +101,17 @@ public class Connect {
 			rs = stmt.executeQuery(SQL);
 
 			while (rs.next()) {
-				System.out.println(rs.getString(1) + " " + rs.getString(2) + " " + rs.getString(3));
+				//System.out.println(rs.getString(1) + " " + rs.getString(2) + " " + rs.getString(3));
+
+				results.addAll(rs.getString(1));
 			}
 
 			clearTable();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+
+		return results;
 	}
 
 	/**
