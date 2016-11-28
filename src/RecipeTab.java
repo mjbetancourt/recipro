@@ -40,12 +40,16 @@ class RecipeTab extends Tab {
      * @param recipe an existing recipe to display
      */
     RecipeTab(Recipe recipe) {
-        RecipeTab();
-
-        setText(recipe.getTitle());
+        super(recipe.getTitle());
 
         setRecipeEditable(false);
         isRecipeNew = false;
+
+        toolBar.getItems().add(editButton);
+
+        layout.getChildren().addAll(toolBar, editor);
+
+        setContent(layout);
     }
 
     /**
