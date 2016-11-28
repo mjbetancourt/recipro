@@ -13,20 +13,21 @@ import java.util.ArrayList;
  */
 public class Connect {
 
-	private String Server = "68.0.192.250";
-	private int port = 53978;
-	private String user = "bahama";
-	private String password = "recipro";
-	private String database = "ReciProDB";
+	private final String Server = "68.0.192.250";
+	private final String port = "53978";
+	private final String user = "bahama";
+	private final String password = "recipro";
+	private final String database = "ReciProDB";
+
 	private Connection con = null;
 	private Statement stmt = null;
 	private ResultSet rs = null;
 
-	private final ArrayList<String> keywords;
+	private ArrayList<String> keywords = new ArrayList<>();
 
 	//Creates the connection string required to connect to the DB
 	private String jdbcurl = "jdbc:sqlserver://" + Server + ":" + port + ";databaseName=" + database + ";user=" + user
-								+ ";password=" + password;
+			+ ";password=" + password;
 
 	/**
 	 * Default constructor
@@ -63,14 +64,15 @@ public class Connect {
 	 */
 	public void query(String s) throws SQLException {
 		connector();
-		String SQL = "SELECT DISTINCT * from MasterTable WHERE (dishName LIKE '%"+s+"%'"+
+
+		final String SQL = "SELECT DISTINCT * from MasterTable WHERE (dishName LIKE '%"+s+"%'"+
 				"OR ingredients LIKE '%"+s+"%')";
 		stmt = con.createStatement();
 		rs = stmt.executeQuery(SQL);
 
 		try {
 			while (rs.next()) {
-				SQL = "INSERT INTO ResultTable VALUES ('"+rs.getString(1)+"', '"+rs.getString(2)+"', '"+rs.getString(3)+"');";
+				final SQL = "INSERT INTO ResultTable VALUES ('"+rs.getString(1)+"', '"+rs.getString(2)+"', '"+rs.getString(3)+"');";
 				con.createStatement();
 				stmt.executeUpdate(SQL);
 			}
@@ -87,10 +89,10 @@ public class Connect {
 	 * @throws SQLException
 	 */
 	public void getResults() throws SQLException {
-
 		try {
 			connector();
-			String SQL = "SELECT DISTINCT * FROM ResultTable";
+
+			final String SQL = "SELECT DISTINCT * FROM ResultTable";
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(SQL);
 
@@ -99,7 +101,9 @@ public class Connect {
 			}
 
 			clearTable();
-		} catch (SQLException e) {}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -111,7 +115,8 @@ public class Connect {
 	 */
 	private void clearTable() throws SQLException {
 		connector();
-		String SQL = "DELETE FROM ResultTable";
+
+		final String SQL = "DELETE FROM ResultTable";
 		stmt = con.createStatement();
 		stmt.executeUpdate(SQL);
 	}
@@ -146,8 +151,9 @@ public class Connect {
 	 */
 	public void addRecipe(String name, String ingredient, String recipe) throws SQLException {
 		connector();
-		String SQL = "INSERT INTO MasterTable VALUES('"+name+"', '"+ingredient+"', '"+recipe+"')";
+
+		final String SQL = "INSERT INTO MasterTable VALUES('"+name+"', '"+ingredient+"', '"+recipe+"')";
 		stmt = con.createStatement();
 		stmt.executeUpdate(SQL);
 	}
-}//END
+}
