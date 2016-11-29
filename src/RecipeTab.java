@@ -54,15 +54,6 @@ class RecipeTab extends Tab {
         titleField.setText(recipe.getTitle());
         editor.setHtmlText(recipe.getInstructions());
 
-        editButton.setText("Done");
-        editButton.setOnAction(a -> {
-            try {
-                saveChanges();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        });
-
         try {
             setRecipeEditable(false);
 
