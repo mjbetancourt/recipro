@@ -3,6 +3,7 @@ import javafx.scene.web.HTMLEditor;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
+import java.sql.SQLException;
 
 /**
  * Created by dillon on 9/29/16.
@@ -21,17 +22,21 @@ class RecipeTab extends Tab {
      * Constructor to create a new RecipeTab that accepts a new recipe
      * for the database.
      */
-    RecipeTab() {
+    RecipeTab() throws SQLException {
         super("New Recipe");
 
-        setRecipeEditable(true);
-        isRecipeNew = true;
+        try {
+            setRecipeEditable(true);
+            isRecipeNew = true;
 
-        toolBar.getItems().add(editButton);
+            toolBar.getItems().add(editButton);
 
-        layout.getChildren().addAll(toolBar, editor);
+            layout.getChildren().addAll(toolBar, editor);
 
-        setContent(layout);
+            setContent(layout);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -39,23 +44,27 @@ class RecipeTab extends Tab {
      * existing recipe in the database.
      * @param recipe an existing recipe to display
      */
-    RecipeTab(Recipe recipe) {
+    RecipeTab(Recipe recipe) throws SQLException {
         super(recipe.getTitle());
 
-        setRecipeEditable(false);
-        isRecipeNew = false;
+        try {
+            setRecipeEditable(false);
+            isRecipeNew = false;
 
-        toolBar.getItems().add(editButton);
+            toolBar.getItems().add(editButton);
 
-        layout.getChildren().addAll(toolBar, editor);
+            layout.getChildren().addAll(toolBar, editor);
 
-        setContent(layout);
+            setContent(layout);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * Determines whether the recipe is view-only or editable by the user.
      */
-    private void setRecipeEditable(boolean editable) {
+    private void setRecipeEditable(boolean editable) throws SQLException {
         if (editable) {
             isRecipeEditable = true;
             editor.setDisable(false);
@@ -63,12 +72,20 @@ class RecipeTab extends Tab {
             if (isRecipeNew) {
                 editButton.setText("Save");
                 editButton.setOnAction(a -> {
-                    saveNewRecipe();
+                    try {
+                        saveNewRecipe();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
                 });
             } else {
                 editButton.setText("Done");
                 editButton.setOnAction(a -> {
-                    saveChanges();
+                    try {
+                        saveChanges();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
                 });
             }
         } else {
@@ -77,16 +94,34 @@ class RecipeTab extends Tab {
 
             editButton.setText("Edit");
             editButton.setOnAction(a -> {
-                setRecipeEditable(true);
+                try {
+                    setRecipeEditable(true);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             });
         }
     }
 
-    private void saveNewRecipe() {
-        setRecipeEditable(false);
+    private void saveNewRecipe() throws SQLException {
+        try {
+            isRecipeNew = false;
+            setRecipeEditable(false);
+            Connect.add("New Recipe", " ", editor.getHtmlText());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("New recipe added.");
     }
 
-    private void saveChanges() {
-        setRecipeEditable(false);
+    private void saveChanges() throws SQLException {
+        try {
+            setRecipeEditable(false);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Changes saved.");
     }
 }

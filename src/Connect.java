@@ -128,10 +128,14 @@ public class Connect {
 	 * @throws SQLException
 	 */
 	public static void add(String name, String ingredient, String recipe) throws SQLException {
-		connector();
+		try {
+			connector();
 
-		final String SQL = "INSERT INTO MasterTable VALUES('"+name+"', '"+ingredient+"', '"+recipe+"')";
-		statement = connection.createStatement();
-		statement.executeUpdate(SQL);
+			final String SQL = "INSERT INTO MasterTable VALUES('"+name+"', '"+ingredient+"', '"+recipe+"')";
+			statement = connection.createStatement();
+			statement.executeUpdate(SQL);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

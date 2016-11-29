@@ -3,6 +3,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import java.sql.SQLException;
 
 /**
  * Created by Dillon Fagan on 9/13/16.
@@ -18,7 +19,7 @@ public class Recipro extends Application {
      * Initializes a new Stage as the main window.
      */
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) throws SQLException {
         // Primary layout for the window
         VBox rootLayout = new VBox();
 
@@ -31,8 +32,12 @@ public class Recipro extends Application {
         tabs.setPrefSize(860, 660);
         tabs.getTabs().add(new HomeTab());
 
-        // Add all items to the root layout
-        rootLayout.getChildren().addAll(createMenuBar(), tabs);
+        try {
+            // Add all items to the root layout
+            rootLayout.getChildren().addAll(createMenuBar(), tabs);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         // Show the window
         primaryStage.show();
@@ -41,14 +46,18 @@ public class Recipro extends Application {
     /**
      * Returns a completed MenuBar for the window.
      */
-    private MenuBar createMenuBar() {
+    private MenuBar createMenuBar() throws SQLException {
         MenuBar menuBar  = new MenuBar();
 
         Menu fileMenu = new Menu("File");
 
         MenuItem newRecipeCommand = new MenuItem("New Recipe...");
         newRecipeCommand.setOnAction(a -> {
-          tabs.getTabs().add(new RecipeTab());
+            try {
+                tabs.getTabs().add(new RecipeTab());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         });
 
         fileMenu.getItems().add(newRecipeCommand);

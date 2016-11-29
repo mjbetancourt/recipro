@@ -21,7 +21,7 @@ class HomeTab extends Tab {
      */
     private TextField searchField;
 
-    HomeTab() {
+    HomeTab() throws SQLException {
         super("Home");
 
         setClosable(false);
@@ -64,7 +64,11 @@ class HomeTab extends Tab {
         // Button to open a "New Recipe" window
         Button newRecipeButton = new Button("New Recipe...");
         newRecipeButton.setOnAction(a -> {
-            createNewRecipe();
+            try {
+                createNewRecipe();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         });
 
         // Add all items to the secondary layout
@@ -100,10 +104,14 @@ class HomeTab extends Tab {
     /**
      * Opens a new RecipeTab to write a new recipe.
      */
-    private void createNewRecipe() {
-        RecipeTab newRecipeTab = new RecipeTab();
+    private void createNewRecipe() throws SQLException {
+        try {
+            RecipeTab newRecipeTab = new RecipeTab();
 
-        getTabPane().getTabs().add(newRecipeTab);
-        getTabPane().getSelectionModel().select(newRecipeTab);
+            getTabPane().getTabs().add(newRecipeTab);
+            getTabPane().getSelectionModel().select(newRecipeTab);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
