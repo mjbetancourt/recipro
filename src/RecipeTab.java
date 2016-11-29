@@ -114,7 +114,7 @@ class RecipeTab extends Tab {
 
     private void saveNewRecipe() throws SQLException {
         try {
-            setRecipeEditable(false); // NOTE need to add text entry for recipe name
+            setRecipeEditable(false);
 
             String title;
             if (titleField.getText() == "") {
@@ -129,8 +129,6 @@ class RecipeTab extends Tab {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        System.out.println("New recipe added.");
     }
 
     private void saveChanges() throws SQLException {
@@ -142,7 +140,5 @@ class RecipeTab extends Tab {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        System.out.println("Changes saved.");
     }
 }
