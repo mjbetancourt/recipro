@@ -8,6 +8,8 @@ public class Recipe {
     private String title;
     private String instructions;
 
+    public Recipe() {}
+
     public Recipe(String title, String instructions) {
         this.title = title;
         this.instructions = instructions;

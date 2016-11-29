@@ -138,4 +138,24 @@ public class Connect {
 			e.printStackTrace();
 		}
 	}
+
+	/**
+	 * Updates an existing recipe by index.
+	 * @param index
+	 * @param name
+	 * @param ingredient
+	 * @param recipe
+	 * @throws SQLException
+	 */
+	public static void update(int index, String name, String ingredient, String recipe) throws SQLException {
+		try {
+			connector();
+
+			final String SQL = "UPDATE MasterTable SET Name=" + name + ", Ingredient=" + ingredient + ", Recipe=" + recipe + "WHERE Index=" + index + ";";
+			statement = connection.createStatement();
+			statement.executeUpdate(SQL);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 }

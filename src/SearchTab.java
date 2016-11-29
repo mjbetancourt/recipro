@@ -21,11 +21,10 @@ class SearchTab extends Tab {
 
         try {
             rowData = Connect.getAll();
+            setup();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        setup();
     }
 
     SearchTab(String s) throws SQLException {
@@ -33,24 +32,37 @@ class SearchTab extends Tab {
 
         try {
             rowData = Connect.getByKeyword(s);
+            setup();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        setup();
     }
 
-    private void setup() {
+    private void setup() throws SQLException {
         TableColumn recipeColumn = new TableColumn("Recipe");
-        recipeColumn.setMinWidth(250);
+        recipeColumn.setMinWidth(300);
         recipeColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
-
-        TableColumn instructionsColumn = new TableColumn("Instructions");
-        instructionsColumn.setCellValueFactory(new PropertyValueFactory("instructions"));
 
         setContent(table);
 
-        table.getColumns().addAll(recipeColumn, instructionsColumn);
+        table.setRowFactory(t -> {
+            TableRow<Recipe> row = new TableRow<>();
+            row.setOnMouseClicked(e -> {
+                if (e.getClickCount() == 2 && (!row.isEmpty())) {
+                    try {
+                        RecipeTab newRecipeTab = new RecipeTab(row.getItem());
+                        getTabPane().getTabs().addAll(newRecipeTab);
+                        getTabPane().getSelectionModel().select(newRecipeTab);
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            });
+
+            return row ;
+        });
+
+        table.getColumns().addAll(recipeColumn);
         table.setItems(rowData);
 
         setText(String.valueOf(table.getItems().size()) + " Recipes Found");
