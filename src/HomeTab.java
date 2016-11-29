@@ -20,12 +20,12 @@ class HomeTab extends Tab {
      * Serves as a space-separated entry for recipe search.
      */
     private TextField searchField;
-
+    
     HomeTab() {
         super("Home");
-
+        
         setClosable(false);
-
+        
         // Primary layout for the tab
         VBox primaryLayout = new VBox();
         primaryLayout.setPadding(new Insets(16, 16, 16, 16));
