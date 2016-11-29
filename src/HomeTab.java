@@ -34,8 +34,8 @@ class HomeTab extends Tab {
         primaryLayout.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
 
         // Logo
-        Image logo = new Image("assets/logo.png");
-        ImageView logoView = new ImageView(logo);
+        //Image logo = new Image("/assets/logo.png");
+        //ImageView logoView = new ImageView(logo);
 
         // Secondary layout to house input and submit button
         HBox secondaryLayout = new HBox();
@@ -71,7 +71,7 @@ class HomeTab extends Tab {
         secondaryLayout.getChildren().addAll(searchField, searchButton);
 
         // Add all items to the primary layout
-        primaryLayout.getChildren().addAll(logoView, secondaryLayout, newRecipeButton);
+        primaryLayout.getChildren().addAll(secondaryLayout, newRecipeButton);
 
         // Set primary layout as the content of the tab
         setContent(primaryLayout);
@@ -81,14 +81,11 @@ class HomeTab extends Tab {
      * Searches by space-separated keywords.
      */
     private void search() throws ClassNotFoundException, SQLException {
-        final ArrayList<String> keywords = new ArrayList<>();
-
-        for (String keyword : searchField.getText().split(" ")) {
-        	keywords.add(keyword);
-        }
-
         try {
-            getTabPane().getTabs().add(new SearchTab(new Connect(keywords)));
+            SearchTab newSearchTab = new SearchTab(searchField.getText());
+
+            getTabPane().getTabs().add(newSearchTab);
+            getTabPane().getSelectionModel().select(newSearchTab);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -98,6 +95,9 @@ class HomeTab extends Tab {
      * Opens a new RecipeTab to write a new recipe.
      */
     private void createNewRecipe() {
-        getTabPane().getTabs().add(new RecipeTab());
+        RecipeTab newRecipeTab = new RecipeTab();
+
+        getTabPane().getTabs().add(newRecipeTab);
+        getTabPane().getSelectionModel().select(newRecipeTab);
     }
 }
