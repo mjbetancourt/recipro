@@ -17,22 +17,36 @@ import javafx.collections.*;
  */
 public class Connect {
 
+	/** IPv4 Address of the Server. */
 	private static final String Server = "68.0.192.250";
+
+	/** Port for the Database Server. */
 	private static final String port = "53978";
+
+	/** Username for the Database. */
 	private static final String user = "bahama";
+
+	/** Password for the Database. */
 	private static final String password = "recipro";
+
+	/** Name of the Database. */
 	private static final String database = "ReciProDB";
 
+	/** Establishes a Connection with the Database. */
 	private static Connection connection;
+
+	/** Prepares queries to the Database. */
 	private static Statement statement;
+
+	/** Results of a query to the Database. */
 	private static ResultSet set;
 
-	//Creates the connection string required to connect to the DB
+	/** URL for connecting to the Database. */
 	private static String jdbcurl = "jdbc:sqlserver://" + Server + ":" + port + ";databaseName=" + database + ";user=" + user
 			+ ";password=" + password;
 
 	/**
-	 * Returns an ObservableList containing all recipes in the database.
+	 * Returns an ObservableList containing all Recipes in the Database.
 	 * @throws SQLException
 	 */
 	public static ObservableList<Recipe> getAll() throws SQLException {
@@ -58,8 +72,8 @@ public class Connect {
 	}
 
 	/**
-	 * Returns an ObservableList containing recipes from the database
-	 * that are like given keywords in a String.
+	 * Returns an ObservableList containing Recipes from the Database
+	 * that are like given Keywords in a String.
 	 * @param s
 	 * @throws SQLException
 	 */
@@ -101,18 +115,15 @@ public class Connect {
 	}
 
 	/**
-	 * This method will connect the user to the database
+	 * Loads the SQL Server Driver and establishes a Connection.
 	 */
 	private static void connector() {
 		try {
 			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+			connection = DriverManager.getConnection(jdbcurl);
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-
-		try {
-			connection = DriverManager.getConnection(jdbcurl);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -120,9 +131,8 @@ public class Connect {
 	}
 
 	/**
-	 * This method will call the connector method
-	 * Then it will take the parameters and make a new entry
-	 * into the database for a new recipe
+	 * Calls connector() and then takes Parameters to make a new Entry
+	 * in the Database for a new Recipe.
 	 * @param name
 	 * @param ingredient
 	 * @param recipe
@@ -141,7 +151,7 @@ public class Connect {
 	}
 
 	/**
-	 * Updates an existing recipe by index.
+	 * Updates an existing Recipe by its Index.
 	 * @param index
 	 * @param name
 	 * @param ingredient
@@ -152,7 +162,7 @@ public class Connect {
 		try {
 			connector();
 
-			final String SQL = "UPDATE MasterTable SET dishName='"+name+"', recipe='"+recipe+"' WHERE dishName='"+name+"';"; // NOTE Complete the statement.
+			final String SQL = "UPDATE MasterTable SET dishName='"+name+"', recipe='"+recipe+"' WHERE dishName='"+name+"';";
 			statement = connection.createStatement();
 			statement.executeUpdate(SQL);
 		} catch (SQLException e) {
