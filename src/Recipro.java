@@ -54,7 +54,9 @@ public class Recipro extends Application {
         MenuItem newRecipeCommand = new MenuItem("New Recipe...");
         newRecipeCommand.setOnAction(a -> {
             try {
-                tabs.getTabs().add(new RecipeTab());
+                RecipeTab newRecipeTab = new RecipeTab();
+                tabs.getTabs().add(newRecipeTab);
+                tabs.getSelectionModel().select(newRecipeTab);
             } catch (SQLException e) {
                 e.printStackTrace();
             }

@@ -13,9 +13,17 @@ import javafx.scene.control.cell.PropertyValueFactory;
  */
 class SearchTab extends Tab {
 
+    /** Displays Results of a Database Query. */
     private TableView<Recipe> table = new TableView<>();
+
+    /** Results of a Query; the Contents of the TableView. */
     private ObservableList<Recipe> rowData = FXCollections.observableArrayList();
 
+    /**
+     * Default Constructor. Fetches all Recipes from the Database and
+     * displays them in a Table.
+     * @throws SQLException
+     */
     SearchTab() throws SQLException {
         super("Searching...");
 
@@ -27,6 +35,12 @@ class SearchTab extends Tab {
         }
     }
 
+    /**
+     * Fetches all Recipes that are similar to a given String of Keywords
+     * and displays them in a Table.
+     * @param s
+     * @throws SQLException
+     */
     SearchTab(String s) throws SQLException {
         super("Searching...");
 
@@ -38,6 +52,10 @@ class SearchTab extends Tab {
         }
     }
 
+    /**
+     * Sets up the UI for the Tab.
+     * @throws SQLException
+     */
     private void setup() throws SQLException {
         TableColumn recipeColumn = new TableColumn("Recipe");
         recipeColumn.setMinWidth(300);
@@ -45,6 +63,7 @@ class SearchTab extends Tab {
 
         setContent(table);
 
+        // Fetch the Recipe Object from a selected Row and throw into a RecipeTab.
         table.setRowFactory(t -> {
             TableRow<Recipe> row = new TableRow<>();
             row.setOnMouseClicked(e -> {
@@ -62,9 +81,13 @@ class SearchTab extends Tab {
             return row ;
         });
 
+        // Add the Recipe Column to the Table.
         table.getColumns().addAll(recipeColumn);
+
+        // Add the retrieved Data to the Table.
         table.setItems(rowData);
 
+        // Update the Tab's Title with the Number of Results.
         setText(String.valueOf(table.getItems().size()) + " Recipes Found");
     }
 }

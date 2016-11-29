@@ -18,6 +18,7 @@ class RecipeTab extends Tab {
     private ToolBar toolBar = new ToolBar();
     private TextField titleField = new TextField();
     private Button editButton = new Button();
+    private Button deleteButton = new Button("Delete");
     private HTMLEditor editor = new HTMLEditor();
 
     /**
@@ -56,15 +57,19 @@ class RecipeTab extends Tab {
 
         try {
             setRecipeEditable(false);
-
-            setup();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        setup();
     }
 
     private void setup() {
-        toolBar.getItems().addAll(titleField, editButton);
+        deleteButton.setOnAction(a -> {
+            delete();
+        });
+
+        toolBar.getItems().addAll(titleField, deleteButton, editButton);
         layout.getChildren().addAll(toolBar, editor);
 
         setContent(layout);
@@ -79,7 +84,7 @@ class RecipeTab extends Tab {
             titleField.setDisable(false);
             editor.setDisable(false);
 
-            editButton.setText("Done");
+            editButton.setText("Save Changes");
             editButton.setOnAction(a -> {
                 try {
                     saveChanges();
@@ -131,5 +136,15 @@ class RecipeTab extends Tab {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Prompts the user whether or not to delete the open recipe.
+     * If confirmed, the record is deleted (if it exists) and this tab is closed.
+     */
+    private void delete() {
+        // prompt
+        // delete recipe
+        getTabPane().getTabs().removeAll(this);
     }
 }

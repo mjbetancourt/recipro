@@ -9,8 +9,7 @@ import java.util.ArrayList;
 
 import javafx.collections.*;
 
-// Note: possibly change Connect so that a query is called as thus:
-// results = Connect.search(keywords);
+// NOTE ResultTable is deprecated; can now be dropped from DB.
 
 /**
  * Created by Robert Russell
@@ -47,6 +46,7 @@ public class Connect {
 			set = statement.executeQuery(SQL);
 
 			while (set.next()) {
+				// NOTE How do we retrieve also the record's index in the DB?
 				Recipe r = new Recipe(set.getString(1), set.getString(3));
 				results.addAll(r);
 			}
@@ -59,7 +59,8 @@ public class Connect {
 
 	/**
 	 * Returns an ObservableList containing recipes from the database
-	 * that are like given keywords.
+	 * that are like given keywords in a String.
+	 * @param s
 	 * @throws SQLException
 	 */
 	public static ObservableList<Recipe> getByKeyword(String s) throws SQLException {
@@ -151,7 +152,7 @@ public class Connect {
 		try {
 			connector();
 
-			final String SQL = "UPDATE MasterTable SET Name=" + name + ", Ingredient=" + ingredient + ", Recipe=" + recipe + "WHERE Index=" + index + ";";
+			final String SQL = "UPDATE MasterTable SET dishName='"+name+"', recipe='"+recipe+"' WHERE dishName='"+name+"';"; // NOTE Complete the statement.
 			statement = connection.createStatement();
 			statement.executeUpdate(SQL);
 		} catch (SQLException e) {
