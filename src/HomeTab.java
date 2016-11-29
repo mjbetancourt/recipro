@@ -20,12 +20,12 @@ class HomeTab extends Tab {
      * Serves as a space-separated entry for recipe search.
      */
     private TextField searchField;
-    
+
     HomeTab() {
         super("Home");
-        
+
         setClosable(false);
-        
+
         // Primary layout for the tab
         VBox primaryLayout = new VBox();
         primaryLayout.setPadding(new Insets(16, 16, 16, 16));
@@ -81,14 +81,11 @@ class HomeTab extends Tab {
      * Searches by space-separated keywords.
      */
     private void search() throws ClassNotFoundException, SQLException {
-        final ArrayList<String> keywords = new ArrayList<>();
-
-        for (String keyword : searchField.getText().split(" ")) {
-        	keywords.add(keyword);
-        }
-
         try {
-            getTabPane().getTabs().add(new SearchTab(new Connect(keywords)));
+            SearchTab newSearchTab = new SearchTab(searchField.getText());
+
+            getTabPane().getTabs().add(newSearchTab);
+            getTabPane().getSelectionModel().select(newSearchTab);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -98,6 +95,9 @@ class HomeTab extends Tab {
      * Opens a new RecipeTab to write a new recipe.
      */
     private void createNewRecipe() {
-        getTabPane().getTabs().add(new RecipeTab());
+        RecipeTab newRecipeTab = new RecipeTab();
+
+        getTabPane().getTabs().add(newRecipeTab);
+        getTabPane().getSelectionModel().select(newRecipeTab);
     }
 }

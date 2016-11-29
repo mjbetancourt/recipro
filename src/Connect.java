@@ -9,104 +9,46 @@ import java.util.ArrayList;
 
 import javafx.collections.*;
 
+// Note: possibly change Connect so that a query is called as thus:
+// results = Connect.search(keywords);
+
 /**
  * Created by Robert Russell
  *
  */
 public class Connect {
 
-	private final String Server = "68.0.192.250";
-	private final String port = "53978";
-	private final String user = "bahama";
-	private final String password = "recipro";
-	private final String database = "ReciProDB";
+	private static final String Server = "68.0.192.250";
+	private static final String port = "53978";
+	private static final String user = "bahama";
+	private static final String password = "recipro";
+	private static final String database = "ReciProDB";
 
-	private Connection con = null;
-	private Statement stmt = null;
-	private ResultSet rs = null;
-
-	private ArrayList<String> keywords = new ArrayList<>();
+	private static Connection connection;
+	private static Statement statement;
+	private static ResultSet set;
 
 	//Creates the connection string required to connect to the DB
-	private String jdbcurl = "jdbc:sqlserver://" + Server + ":" + port + ";databaseName=" + database + ";user=" + user
+	private static String jdbcurl = "jdbc:sqlserver://" + Server + ":" + port + ";databaseName=" + database + ";user=" + user
 			+ ";password=" + password;
 
 	/**
-	 * Default constructor
-	 */
-	public Connect() {}
-
-	/**
-	 * Accepts an ArrayList of keywords and initiates a search.
-	 */
-	public Connect(ArrayList<String> keywords) throws ClassNotFoundException, SQLException {
-		this.keywords = keywords;
-
-		try {
-			for (String keyword : keywords) {
-				query(keyword);
-				getResults();
-			}
-
-			clearTable();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * This method will call the connector() Method
-	 * Then it will execute a SQL query looking for similar matches based on what the user entered into
-	 * the search field.
-	 * If user inputs nothing and hits search everything will be a match
-	 * Every match will then get inserted into a results table
-	 * @param s
-	 * @throws ClassNotFoundException
+	 * Returns an ObservableList containing all recipes in the database.
 	 * @throws SQLException
 	 */
-	public void query(String s) throws ClassNotFoundException, SQLException {
-		try {
-			connector();
-
-			String SQL = "SELECT DISTINCT * from MasterTable WHERE (dishName LIKE '%"+s+"%'"+
-					"OR ingredients LIKE '%"+s+"%')";
-			stmt = con.createStatement();
-			rs = stmt.executeQuery(SQL);
-
-			while (rs.next()) {
-				SQL = "INSERT INTO ResultTable VALUES ('"+rs.getString(1)+"', '"+rs.getString(2)+"', '"+rs.getString(3)+"');";
-				con.createStatement();
-				stmt.executeUpdate(SQL);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * This method will call the connector() method
-	 * Then it will retrieve all unique/distinct results from the results table and returns them to the user
-	 * This will prevent the user from getting duplicate results
-	 * Then it will call the clearTable() method
-	 * @throws SQLException
-	 */
-	public ObservableList<String> getResults() throws SQLException {
+	public ObservableList<String> getAll() throws SQLException {
 		ObservableList<String> results = FXCollections.observableArrayList();
 
 		try {
 			connector();
 
-			final String SQL = "SELECT DISTINCT * FROM ResultTable";
-			stmt = con.createStatement();
-			rs = stmt.executeQuery(SQL);
+			final String SQL = "SELECT * FROM MasterTable";
+			statement = connection.createStatement();
+			set = statement.executeQuery(SQL);
 
-			while (rs.next()) {
-				//System.out.println(rs.getString(1) + " " + rs.getString(2) + " " + rs.getString(3));
-
-				results.addAll(rs.getString(1));
+			while (set.next()) {
+				results.addAll(set.getString(1));
 			}
-
-			clearTable();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -115,24 +57,50 @@ public class Connect {
 	}
 
 	/**
-	 * This method will call the connector() method
-	 * Then it will execute an update to the result table deleting all the results
-	 * but leaving the structure of the table intact
-	 * This will prevent our results table from becoming too big
+	 * Returns an ObservableList containing recipes from the database
+	 * that are like given keywords.
 	 * @throws SQLException
 	 */
-	private void clearTable() throws SQLException {
-		connector();
+	public static ObservableList<String> getByKeyword(String s) throws SQLException {
+		ObservableList<String> results = FXCollections.observableArrayList();
 
-		final String SQL = "DELETE FROM ResultTable";
-		stmt = con.createStatement();
-		stmt.executeUpdate(SQL);
+		final ArrayList<String> keywords = new ArrayList<>();
+        for (String keyword : s.split(" ")) {
+        	keywords.add(keyword);
+        }
+
+		try {
+			connector();
+
+			String SQL = "SELECT DISTINCT * FROM MasterTable WHERE ";
+
+			for (int i = 0; i < keywords.size(); i++) {
+				if (i == 0) {
+					SQL += "(dishName LIKE '%" + keywords.get(i) + "%' OR ingredients LIKE '%"
+						+ keywords.get(i) + "%' OR recipe LIKE '%" + keywords.get(i) + "%')";
+				} else {
+					SQL += "OR (dishName LIKE '%" + keywords.get(i) + "%' OR ingredients LIKE'%"
+						+ keywords.get(i) + "%' OR recipe LIKE '%" + keywords.get(i) + "%')";
+				}
+			}
+
+			statement = connection.createStatement();
+			set = statement.executeQuery(SQL);
+
+			while (set.next() != false) {
+				results.addAll(set.getString(1));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return results;
 	}
 
 	/**
 	 * This method will connect the user to the database
 	 */
-	private void connector() {
+	private static void connector() {
 		try {
 			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 		} catch (ClassNotFoundException e) {
@@ -141,7 +109,7 @@ public class Connect {
 		}
 
 		try {
-			con = DriverManager.getConnection(jdbcurl);
+			connection = DriverManager.getConnection(jdbcurl);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -157,11 +125,11 @@ public class Connect {
 	 * @param recipe
 	 * @throws SQLException
 	 */
-	public void addRecipe(String name, String ingredient, String recipe) throws SQLException {
+	public static void add(String name, String ingredient, String recipe) throws SQLException {
 		connector();
 
 		final String SQL = "INSERT INTO MasterTable VALUES('"+name+"', '"+ingredient+"', '"+recipe+"')";
-		stmt = con.createStatement();
-		stmt.executeUpdate(SQL);
+		statement = connection.createStatement();
+		statement.executeUpdate(SQL);
 	}
 }
